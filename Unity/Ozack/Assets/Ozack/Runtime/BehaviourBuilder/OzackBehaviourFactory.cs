@@ -8,7 +8,7 @@ namespace Ozack
 {
     public interface IOzackBehaviourFactory<TCommand> : IDisposable
     {
-        IOzackBehaviour<TCommand> Create(IOzackContext context);
+        IOzackBehaviour<TCommand> Create(IOzackContext context, TCommand cmd );
         bool CanCreate(TCommand cmd);
     }
     public abstract class OzackBehaviourFactory<TCommand> : IOzackBehaviourFactory<TCommand>
@@ -29,11 +29,10 @@ namespace Ozack
         /// <summary>
         /// 作成
         /// </summary>
-        public IOzackBehaviour<TCommand> Create(IOzackContext context)
+        public IOzackBehaviour<TCommand> Create(IOzackContext context, TCommand cmd )
         {
             var behaviour = DoCreate();
-            behaviour.Bind(context);
-
+            behaviour.Bind( context, cmd );
             return behaviour;
         }
 

@@ -24,22 +24,23 @@ public class Sample : MonoBehaviour
         // コマンドとして解釈する文字列
         var table = new HashSet<string>
         {
-            "aaa","bbb",
+            "SetText","bbb",
         };
         // 引数からコマンドデータへの変換方法
-        var cmdBuilder = new OzackCommandBuilder<Data>(table, cmd => new Data());
+        var cmdBuilder = new OzackCommandBuilder<Data>(table, args => new Data( args ));
         // コマンドへ変換
         var system = new OzackParseSystem<Data>(format, cmdBuilder);
 
         //
+        var context = new OzackContext
+            (
+                m_text
+            );
         var commands = system.Parse( m_script.text );
-        var builder = new OzackBehaviourBuilder<Data>();
-        builder.OnBuild = cmd =>
-        {
-            //return new OzackBehaviour<Data>();
-            return null;
-        };
-
+        var builder = new OzackBehaviourBuilder<Data>( 
+            context, 
+            SetTextBehaviour.Factory()
+        );
         var behaviours 
             = commands
                 .Select(cmd => builder.Build(cmd))
