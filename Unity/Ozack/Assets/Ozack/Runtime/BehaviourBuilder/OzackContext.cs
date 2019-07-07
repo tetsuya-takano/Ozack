@@ -8,8 +8,8 @@ namespace Ozack
 {
     public interface IOzackContext : IDisposable
     {
-        void Add<T>( T obj );
-        T Get<T>();
+        void Add<T>(string key, T obj);
+        T Get<T>( string key );
     }
     /// <summary>
     /// データコンテナ
@@ -19,19 +19,11 @@ namespace Ozack
         //=========================================
         // 変数
         //=========================================
-        private HashSet<object> m_context = new HashSet<object>();
+        private Dictionary<string,object> m_context = new Dictionary<string, object>();
 
         //=========================================
         // 関数
         //=========================================
-
-        public OzackContext( params object[] contexts )
-        {
-            foreach (var o in contexts)
-            {
-                m_context.Add(o);
-            }
-        }
 
         /// <summary>
         /// 破棄
@@ -46,11 +38,11 @@ namespace Ozack
         /// <summary>
         /// 取得
         /// </summary>
-        public T Get<T>()
+        public T Get<T>( string key )
         {
-            foreach (var c in m_context)
+            if (m_context.TryGetValue(key, out var obj))
             {
-                if (c is T v)
+                if (obj is T v)
                 {
                     return v;
                 }
@@ -58,9 +50,9 @@ namespace Ozack
             return default;
         }
 
-        public void Add<T>(T obj)
+        public void Add<T>(string key, T obj)
         {
-            m_context.Add(obj);
+            m_context.Add(key, obj);
         }
     }
 }

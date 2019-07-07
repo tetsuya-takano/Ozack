@@ -57,7 +57,7 @@ public sealed class SetTextBehaviour : OzackBehaviour<Data>
 
     protected override void DoBegin()
     {
-        Context.Get<UnityEngine.UI.Text>().text = m_message;
+        Context.Get<UnityEngine.UI.Text>("txt").text = m_message;
     }
 }
 

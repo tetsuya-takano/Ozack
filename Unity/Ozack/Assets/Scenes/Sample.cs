@@ -32,10 +32,9 @@ public class Sample : MonoBehaviour
         var system = new OzackParseSystem<Data>(format, cmdBuilder);
 
         //
-        var context = new OzackContext
-            (
-                m_text
-            );
+        var context = new OzackContext();
+        context.Add("txt", m_text);
+
         var commands = system.Parse( m_script.text );
         var builder = new OzackBehaviourBuilder<Data>( 
             context, 
