@@ -8,7 +8,6 @@ namespace Ozack
 	/// <summary>
 	/// 挙動
 	/// </summary>
-	/// <typeparam name="TCommand"></typeparam>
 	public interface IOzackBehaviour<TCommand>  : IDisposable
 	{
 		void Init();
@@ -17,12 +16,20 @@ namespace Ozack
 
 		void End();
 	}
-	public abstract class OzackBehaviour<TCommand> : IOzackBehaviour<TCommand>
-	{
-		//==============================
-		// プロパティ
-		//==============================
-		public bool IsDisposed { get; private set; }
+    public interface IOzackBehaviourGenerater<TCommand> : IOzackBehaviour<TCommand>
+    {
+        void Bind( IOzackContext context );
+    }
+
+    public abstract class OzackBehaviour<TCommand> 
+        : IOzackBehaviour<TCommand>,
+          IOzackBehaviourGenerater<TCommand>
+    {
+        //==============================
+        // プロパティ
+        //==============================
+        protected IOzackContext Context { get; private set; }
+        public bool IsDisposed { get; private set; }
 
 		//==============================
 		// 関数
@@ -53,9 +60,16 @@ namespace Ozack
 			{
 				return;
 			}
+            Context = null;
 			DoDispose();
 			IsDisposed = true;
 		}
 		protected virtual void DoDispose() { }
+
+
+        public void Bind( IOzackContext context )
+        {
+            Context = context;
+        }
 	}
 }
